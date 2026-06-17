@@ -12,4 +12,4 @@ php tournament.php \
     --binary /calea/spre/binar4 --name nume4 \
     --rounds 6 \
     --save $SAVE_DIR \
-    --save-inputs \
+    --save-inputs

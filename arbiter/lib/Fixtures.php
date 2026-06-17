@@ -10,6 +10,11 @@ class Fixtures {
 
   function __construct(int $n) {
     $this->v = range(0, $n - 1);
+    if ($n % 2) {
+      // Forțează un număr par de jucători. Ulterior îl vom elimina pe null
+      // din meciuri.
+      $this->v[] = null;
+    }
     shuffle($this->v);
     $this->roundNo = 0;
   }
@@ -21,12 +26,15 @@ class Fixtures {
     for ($i = 0; $i < $half; $i++) {
       $x = $this->v[$i];
       $y = $this->v[$i + $half];
-      if ($this->roundNo % 2) {
-        $tmp = $x;
-        $x = $y;
-        $y = $tmp;
+
+      if (($x !== null) && ($y !== null)) {
+        if ($this->roundNo % 2) {
+          $tmp = $x;
+          $x = $y;
+          $y = $tmp;
+        }
+        $result[] = [$x, $y];
       }
-      $result[] = [$x, $y];
     }
     shuffle($result);
 
