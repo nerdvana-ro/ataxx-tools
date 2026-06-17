@@ -7,11 +7,13 @@
  */
 
 class Output {
+  public string $contents;
   public array $tokens;
   public array $kibitzes;
 
-  function __construct($tokens, $kibitzes) {
-    $this->tokens = $tokens;
+  function __construct($contents, $kibitzes) {
+    $this->contents = $contents;
+    $this->tokens = preg_split('/\s+/', $contents, -1, PREG_SPLIT_NO_EMPTY);
     $this->kibitzes = $kibitzes;
   }
 }

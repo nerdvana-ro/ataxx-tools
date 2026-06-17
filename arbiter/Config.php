@@ -20,7 +20,7 @@ class Config {
   // sprintf() numărul rundei și al mutării și numele jucătorilor.
   const SAVE_GAME_FILE = 'round-%03d-%s-%s.json';
   const SAVE_INPUT_DIR = 'inputs-%03d-%s-%s';
-  const SAVE_INPUT_FILE = 'move-%03d.txt';
+  const SAVE_INPUT_FILE = 'input-%03d.txt';
 
   const BOARD_SIZE = 7;
   const INIT_BOARD = [

@@ -9,7 +9,7 @@ class Interactor {
   private string $input;
 
   private float $time;     // Timpul petrecut, inclusiv invocarea.
-  private array $tokens;   // Ieșirea tokenizată în cuvinte.
+  private string $output;  // Conținutul fișierului de ieșire.
   private array $kibitzes; // Liniile chibițate, fără prefixul „kibitz ”.
 
   function __construct(string $binary, string $input) {
@@ -20,12 +20,12 @@ class Interactor {
     $this->binary = $binary;
     $this->input = $input;
     $this->time = 0;
-    $this->tokens = [];
+    $this->output = '';
     $this->kibitzes = [];
   }
 
   function getOutput(): Output {
-    return new Output($this->tokens, $this->kibitzes);
+    return new Output($this->output, $this->kibitzes);
   }
 
   function getKibitzes(): array {
@@ -44,9 +44,8 @@ class Interactor {
       return;
     }
 
-    $contents = trim($contents);
-    Log::info('Programul a tipărit [%s].', [ $contents ]);
-    $this->tokens = preg_split('/\s+/', $contents, -1, PREG_SPLIT_NO_EMPTY);
+    $this->output = trim($contents);
+    Log::info("Programul a tipărit [{$this->output}].");
   }
 
   function parseAgentError(): void {
@@ -70,15 +69,15 @@ class Interactor {
 
   function run(int $timeLimit): void {
     if ($this->binary == 'human') {
-      self::interactHuman();
+      $this->interactHuman();
     } else {
-      self::interactAgent($timeLimit);
+      $this->interactAgent($timeLimit);
     }
   }
 
   private function interactHuman(): void {
     $line = readline('Introdu o mutare: ');
-    $this->tokens = preg_split('/\s+/', $line, -1, PREG_SPLIT_NO_EMPTY);
+    $this->output = $line;
   }
 
   private function interactAgent(int $timeLimit): void {
@@ -97,13 +96,14 @@ class Interactor {
                    $this->outputFile,
                    $this->errorFile);
 
-    $resultCode = self::runCmd($cmd);
+    $resultCode = $this->runCmd($cmd);
     if ($resultCode !== 0) {
-      Log::warn('Agentul s-a terminat cu codul %d.', [ $resultCode ]);
+      $msg = "Agentul s-a terminat cu codul {$resultCode}.";
+      throw new AtaxxException($msg);
     }
 
-    self::parseAgentOutput();
-    self::parseAgentError();
+    $this->parseAgentOutput();
+    $this->parseAgentError();
   }
 
   private function runCmd(string $cmd): int {

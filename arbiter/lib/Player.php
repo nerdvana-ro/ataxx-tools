@@ -26,7 +26,7 @@ class Player {
     Log::info('Aștept o acțiune de la %s', [ $this->name ]);
     $inter = new Interactor($this->binary, $gameState);
     $inter->run($this->remainingTime);
-    $this->lastMoveTime = $inter->getTime();
+    $this->lastMoveTime = min($inter->getTime(), $this->remainingTime);
     $this->remainingTime -= $this->lastMoveTime;
     return $inter->getOutput();
   }
