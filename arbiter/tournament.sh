@@ -6,10 +6,8 @@ rm -rf $SAVE_DIR
 mkdir $SAVE_DIR
 
 php tournament.php \
-    --binary /calea/spre/binar1 --name nume1 \
-    --binary /calea/spre/binar2 --name nume2 \
-    --binary /calea/spre/binar3 --name nume3 \
-    --binary /calea/spre/binar4 --name nume4 \
-    --rounds 6 \
+    --binary ../agent/doofus/build/doofus --name doofus1 \
+    --binary ../agent/doofus/build/doofus --name doofus2 \
+    --rounds 1 \
     --save $SAVE_DIR \
     --save-inputs
