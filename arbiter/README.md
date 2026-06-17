@@ -108,6 +108,26 @@ php arbiter/tournament.php --binary agent/doofus/build/doofus --name doofus1 --b
 
 Acum în `~/Desktop/games` veți găsi fișierul `round-001-doofus1-doofus2`.
 
+## Script Bash
+
+Dacă vă ajută, puteți colecta toate opțiunile într-un script Bash. Repoul include scriptul `arbiter/tournament.sh`, pe care îl puteți modifica.
+
+```bash
+#!/usr/bin/bash
+
+SAVE_DIR=~/Desktop/ataxx-games
+
+rm -rf $SAVE_DIR
+mkdir $SAVE_DIR
+
+php arbiter/tournament.php \
+    --binary agent/doofus/build/doofus --name doofus1 \
+    --binary agent/doofus/build/doofus --name doofus2 \
+    --rounds 1 \
+    --save $SAVE_DIR \
+    --save-inputs
+```
+
 ## Opțiuni de configurare pentru arbitru
 
 Arbitrul mai admite opțiunile `--rounds <număr>` pentru a organiza mai mult de o partidă și `--save-inputs` pentru a salva toate fișierele de intrare pentru fiecare partidă. Aceasta vă poate ajuta să depanați un bug care survine pe parcursul partidei.
