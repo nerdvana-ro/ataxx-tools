@@ -3,10 +3,11 @@
 class Log {
   const int FATAL = 0;
   const int ERROR = 1;
-  const int WARN = 2;
+  const int WARNING = 2;
   const int SUCCESS = 3;
-  const int INFO = 4;
-  const int DEBUG = 5;
+  const int NOTICE = 4;
+  const int INFO = 5;
+  const int DEBUG = 6;
 
   static function fatal(string $msg, array $args = []): void {
     self::error($msg, $args);
@@ -18,11 +19,15 @@ class Log {
   }
 
   static function warn(string $msg, array $args = [], $indent = 0): void {
-    self::write(self::WARN, AnsiColors::WARNING, $msg, $args, $indent);
+    self::write(self::WARNING, AnsiColors::WARNING, $msg, $args, $indent);
   }
 
   static function success(string $msg, array $args = [], $indent = 0): void {
     self::write(self::SUCCESS, AnsiColors::SUCCESS, $msg, $args, $indent);
+  }
+
+  static function notice(string $msg, array $args = [], $indent = 0): void {
+    self::write(self::NOTICE, AnsiColors::NOTICE, $msg, $args, $indent);
   }
 
   static function info(string $msg, array $args = [], $indent = 0): void {

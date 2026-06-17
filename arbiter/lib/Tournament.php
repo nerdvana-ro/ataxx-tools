@@ -35,7 +35,6 @@ class Tournament {
   private function runGame(int $round, int $id1, int $id2): void {
     $p1 = $this->players[$id1];
     $p2 = $this->players[$id2];
-    Log::info("Partida: {$p1->name} - {$p2->name}");
     $g = new Game($p1, $p2);
     $g->run();
 

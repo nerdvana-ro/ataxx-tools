@@ -8,6 +8,7 @@ class Game {
   private GameInfo $gameInfo;
 
   function __construct(Player $p1, Player $p2) {
+    Log::notice("Partida: {$p1->name} - {$p2->name}");
     $this->players = [$p1, $p2];
     $this->board = new Board();
     $this->badMove = false;
@@ -113,10 +114,10 @@ class Game {
       $this->gameInfo->setPieces($pieces);
     }
 
-    Log::info('======== Finalul partidei');
     $this->print();
+    Log::notice('Scor final:');
     for ($i = 0; $i < 2; $i++) {
-      Log::info('%s: %0.1f puncte, %d piese', [
+      Log::notice('%s: %0.1f puncte, %d piese', [
         $this->players[$i]->name,
         $this->gameInfo->getScore($i),
         $this->gameInfo->getPieces($i),
