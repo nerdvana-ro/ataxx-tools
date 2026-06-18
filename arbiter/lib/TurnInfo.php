@@ -18,7 +18,7 @@ class TurnInfo {
 
   function asArray(): array {
     return [
-      'move' => $this->move->asArray(),
+      'move' => $this->move->toString(),
       'kibitzes' => $this->kibitzes,
       'time' => $this->time,
     ];

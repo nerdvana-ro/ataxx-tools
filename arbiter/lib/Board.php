@@ -29,10 +29,11 @@ class Board {
   }
 
   function print(): void {
+    Log::debug("    a   b   c   d   e   f   g");
     $this->printTopSeparatorLine();
 
     for ($r = 0; $r < Config::BOARD_SIZE; $r++) {
-      $s = '│';
+      $s = Str::charPlusInt('0', $r + 1) . ' │';
       for ($c = 0; $c < Config::BOARD_SIZE; $c++) {
         if ($this->mat[$r][$c] == self::EMPTY) {
           $s .= '   ';
@@ -66,7 +67,7 @@ class Board {
   }
 
   private function printSeparatorLine(string $left, string $center, string $right): void {
-    $s = $left;
+    $s = '  ' . $left;
     for ($i = 0; $i < Config::BOARD_SIZE; $i++) {
       $s .= "───";
       $s .= ($i < Config::BOARD_SIZE - 1) ? $center : $right;

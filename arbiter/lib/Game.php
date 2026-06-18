@@ -35,7 +35,7 @@ class Game {
 
     try {
       $output = $pl->requestAction($input);
-      $move = $this->getMove($output->tokens);
+      $move = $this->getMove($output->text);
       $this->board->makeMove($move);
       $ti = new TurnInfo($move, $output->kibitzes, $pl->lastMoveTime);
       $this->gameInfo->addTurn($ti);
@@ -55,50 +55,13 @@ class Game {
     return $s;
   }
 
-  private function getMove(array $tokens): Move {
-    $type = $this->shiftAndCheck($tokens, Move::T_CLONE, Move::T_JUMP);
-    $src = 0;
-    $dest = 0;
-    $numSquares = Config::BOARD_SIZE * Config::BOARD_SIZE;
-
-    switch ($type) {
-      case Move::T_CLONE:
-        $dest = $this->shiftAndCheck($tokens, 0, $numSquares - 1);
-        break;
-
-      case Move::T_JUMP:
-        $src = $this->shiftAndCheck($tokens, 0, $numSquares - 1);
-        $dest = $this->shiftAndCheck($tokens, 0, $numSquares - 1);
-        break;
+  private function getMove(string $text): Move {
+    $m = new Move($text);
+    if (!$this->board->isLegalMove($m)) {
+      throw new AtaxxException("Mutarea {$text} este ilegală.");
     }
 
-    if (count($tokens)) {
-      throw new AtaxxException("Cuvîntul {$tokens[0]} este în plus.");
-    }
-
-    $move = new Move($type, $src, $dest);
-    if (!$this->board->isLegalMove($move)) {
-      throw new AtaxxException('Mutarea este ilegală.');
-    }
-
-    return $move;
-  }
-
-  private function shiftAndCheck(array &$v, int $lo, int $hi): int {
-    if (empty($v)) {
-      throw new AtaxxException('Mutarea este prea scurtă.');
-    }
-
-    $first = array_shift($v);
-    if (filter_var($first, FILTER_VALIDATE_INT) === false) {
-      throw new AtaxxException("Valoarea [$first] nu este un întreg.");
-    }
-
-    if (($first < $lo) || ($first > $hi)) {
-      throw new AtaxxException("Valoarea $first nu este cuprinsă între $lo și $hi.");
-    }
-
-    return $first;
+    return $m;
   }
 
   function getInfo(): GameInfo {
