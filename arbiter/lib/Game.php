@@ -29,7 +29,7 @@ class Game {
   private function playMove(): void {
     Log::info("Mutarea %s", [$this->gameInfo->getNumTurns()]);
     $this->print();
-    $input = $this->board->asInputFile();
+    $input = $this->asInputFile();
     $this->gameInfo->addInput($input);
     $pl = $this->players[$this->board->side];
 
@@ -45,7 +45,14 @@ class Game {
       Log::warn($msg);
       $this->badMove = true;
     }
+  }
 
+  private function asInputFile(): string {
+    $s = $this->board->asInputFile();
+    $s .= sprintf("%d %d\n",
+                  $this->players[0]->remainingTime,
+                  $this->players[1]->remainingTime);
+    return $s;
   }
 
   private function getMove(array $tokens): Move {

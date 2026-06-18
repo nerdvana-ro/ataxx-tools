@@ -25,7 +25,7 @@ class Board {
       }
       $l[] = $s;
     }
-    return implode("\n", $l);
+    return implode("\n", $l) . "\n";
   }
 
   function print(): void {
