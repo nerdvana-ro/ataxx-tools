@@ -11,20 +11,15 @@ int main(int argc, char** argv) {
   board.readFromStdin();
   board.print();
 
-  Move m;
+  int time[2];
+  scanf("%d %d", &time[0], &time[1]);
+  int my_time = time[board.side];
+  Log::debug("Time: %d milliseconds for an estimated %d moves.\n",
+             my_time, board.estimateRemainingMoves());
 
-  if (STRATEGY == STRAT_RANDOM) {
-    RandomAgent agent(&board);
-    m = agent.getMove();
-  } else {
-    Log::fatal("Unknown value STRATEGY = %d.", STRATEGY);
-  }
-
-  switch(m.type) {
-    case M_PASS: printf("0\n"); break;
-    case M_CLONE: printf("1 %d\n", m.dest); break;
-    case M_JUMP: printf("2 %d %d\n", m.src, m.dest); break;
-  }
+  RandomAgent agent(&board);
+  Move m = agent.getMove();
+  printf("%s\n", m.toString().c_str());
 
   return 0;
 }

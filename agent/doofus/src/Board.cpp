@@ -1,6 +1,7 @@
 #include "Board.h"
 
 #include "AnsiColors.h"
+#include "Config.h"
 #include "Log.h"
 #include <stdio.h>
 #include <sstream>
@@ -52,10 +53,13 @@ void Board::readFromStdin() {
 }
 
 void Board::print() {
+  Log::debug("    a   b   c   d   e   f   g");
   printTopSeparatorLine();
 
   for (int r = 0; r < BOARD_SIZE; r++) {
-    std::string s = "│";
+    std::string s;
+    s = (char)('1' + r);
+    s += " │";
     for (int c = 0; c < BOARD_SIZE; c++) {
       u64 mask = 1ll << (r * BOARD_SIZE + c);
       if (empty & mask) {
@@ -93,7 +97,8 @@ void Board::printBottomSeparatorLine() {
 
 void Board::printSeparatorLine(const char* left, const char* center,
                                const char* right) {
-  std::string s = left;
+  std::string s = "  ";
+  s += left;
   for (int i = 0; i < BOARD_SIZE; i++) {
     s += "───";
     s += (i < BOARD_SIZE - 1) ? center : right;
@@ -107,4 +112,8 @@ int Board::getNumPiecesToMove() {
 
 int Board::getNumEmpty() {
   return __builtin_popcountll(empty);
+}
+
+int Board::estimateRemainingMoves() {
+  return getNumEmpty() / FRACTION_CLONES;
 }

@@ -21,8 +21,6 @@ const int M_PASS = 0;
 const int M_CLONE = 1;
 const int M_JUMP = 2;
 
-const int STRAT_RANDOM = 0;
-
 const int LOG_FATAL = 0;
 const int LOG_ERROR = 1;
 const int LOG_WARN = 2;

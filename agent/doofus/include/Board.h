@@ -22,6 +22,8 @@ public:
   int getNumPiecesToMove();
   int getNumEmpty();
 
+  int estimateRemainingMoves();
+
 private:
   void printTopSeparatorLine();
   void printMiddleSeparatorLine();
