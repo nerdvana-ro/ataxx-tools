@@ -37,12 +37,12 @@ o.....x
 
 ## Datele de ieșire
 
-Programul vostru trebuie să tipărească mutarea dorită. Mutările sînt descrise prin valori întregi. Aceste valori pot fi despărțite prin oricîte spații sau linii noi, pe care arbitrul le ignoră.
+Programul vostru trebuie să tipărească mutarea dorită, sub una din formele
 
-* O mutare de tip clonare are formatul `1 x`, unde `x` este pătratul unde doriți să amplasați o nouă piesă.
-* O mutare de tip salt are formatul `2 x y`, unde `x` este pătratul-sursă, iar `y` este pătratul-destinație.
+* `[a-g][1-7]` pentru o clonare, de exemplu `e4`;
+* `[a-g][1-7]-[a-g][1-7]` pentru un salt, de exemplu `d2-e4`.
 
-Pătratele tablei sînt codificate cu numere între 0 și 48 inclusiv, crescător pe linie începînd din colțul stînga-sus.
+Liniile tablei sînt numerotate de la `1` la `7`, iar coloanele de la `a` la `g`.
 
 În joc pot apărea situații cînd jucătorul la mutare nu mai are mutări valide, fie pentru că nu mai are piese, fie pentru că acele piese nu mai pot ajunge la pătrate goale. În regulile oficiale, jucătorul trebuie să spună „pas”. În implementarea noastră, arbitrul nu va mai invoca programul respectiv. Se presupune că celălalt jucător ocupă toate pătratele rămase goale și arbitrul calculează scorul final cu această presupunere.
 
