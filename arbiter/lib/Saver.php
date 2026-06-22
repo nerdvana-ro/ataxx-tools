@@ -32,8 +32,8 @@ class Saver {
   private function saveGame(): void {
     $fileName = $this->getSaveFile();
     $data = $this->gameInfo->asArray();
-    $data['players'] = array_column($this->players, 'name');
-    $json = json_encode($data);
+    $data  = ['players' => array_column($this->players, 'name')] + $data;
+    $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
     file_put_contents($fileName, $json);
   }
 
