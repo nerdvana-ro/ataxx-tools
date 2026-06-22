@@ -4,6 +4,7 @@ class Game {
   private array $players;
   private Board $board;
   private bool $badMove;
+  private string $badMoveMsg;
   private int $numJumps;
 
   private GameInfo $gameInfo;
@@ -49,9 +50,9 @@ class Game {
       $ti = new TurnInfo($move, $output->kibitzes, $pl->lastMoveTime);
       $this->gameInfo->addTurn($ti);
     } catch (AtaxxException $e) {
-      $msg = sprintf('Eroare: %s', $e->getMessage());
-      Log::warning($msg);
       $this->badMove = true;
+      $this->badMoveMsg = sprintf('Eroare: %s', $e->getMessage());
+      Log::warning($this->badMoveMsg);
     }
   }
 
@@ -86,7 +87,7 @@ class Game {
     $b = $this->board;
 
     if ($this->badMove) {
-      $this->gameInfo->forfeit($this->board->side, $msg);
+      $this->gameInfo->forfeit($this->board->side, $this->badMoveMsg);
     } else if ($this->numJumps == Config::MAX_JUMPS) {
       $this->gameInfo->draw();
     } else {
