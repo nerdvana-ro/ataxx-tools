@@ -38,7 +38,7 @@ class Saver {
   }
 
   private function saveAllInputs(): void {
-    mkdir($this->getInputDir());
+    @mkdir($this->getInputDir());
 
     foreach ($this->gameInfo->getInputs() as $i => $text) {
       $fileName = $this->getInputFile($i);
