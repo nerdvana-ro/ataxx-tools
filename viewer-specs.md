@@ -119,6 +119,10 @@ For the tournament viewer, I would like to upload a zip file containing one JSON
 * JSON files inside the zip file are always coded as `round-XXX-player1-player2.json`, where `XXX` is the round number (three digits with leading zeroes) and `player1` and `player2` are the players' names, which will not contain dashes.
 * For each file, the players' names in the file name match the players' names in the JSON.
 
+The directory [tournament](https://nerdvana.ro/ataxx-viewer/tournament/) includes the saved games for a 12-round, quadruple round-robin with 4 players.
+
+Given such a directory, you can infer the number of players, the number of rounds and the names of the players. Please note that the number of players may be odd, in which case one player will rest on each given round.
+
 The UI for the tournament viewer should have these components:
 
 * A list (or table) of rounds.
@@ -129,7 +133,11 @@ The UI for the tournament viewer should have these components:
 The rankings table should look as follows:
 
 * Each player should have a row in the table.
-* The information for each player should include the name, the number of points scored in completed games and the sum of piece counts in completed games.
+* The information for each player should include
+ * the name;
+ * the number of games played;
+ * the number of points scored in completed games;
+ * the sum of piece counts in completed games.
 * Players should be sorted in decreasing order by points scored. As a tiebreaker, they should be sorted in decreasing order of piece counts.
 
 The rankings table must NOT include the game currently being viewed until the operator scrolls to the end of the game, at which point the rankings table must update to include the game being viewed.
