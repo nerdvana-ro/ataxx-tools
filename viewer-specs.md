@@ -17,9 +17,10 @@ I have placed all the relevant documents at https://nerdvana.ro/ataxx-viewer/
 * After the move, all of the opponent player's pieces adjacent to the destination square are converted (flipped) to the color of the moving player.
 * The game ends when the board fills up. The player who has more pieces wins. Since the number of squares is odd, there are no ties.
 
-For our implementation, we use the following modification to the original rules.
+For our implementation, we use the following modifications to the original rules.
 
 * In the original rules, if a player may not move, either because he has no pieces left or because none of those pieces can reach an empty square by jumping or cloning, then he must pass. In our rules, if a player has no moves, the game ends and the opponent gets all the empty squares.
+* After 50 successive jumps (so 100 half-moves), the arbiter ends the game and declares a draw, 24-24. This is similar to the fifty-move rule in chess to prevent arbitrarily long games.
 
 # Code organization
 
@@ -71,13 +72,13 @@ When the game concludes, the arbiter writes a JSON-formatted file. You can see s
 
 * `players` contains the names of the red player and blue player, in this order.
 * `time_per_game` contains the initial clock times in milliseconds (180000 milliseconds = 3 minutes per player per game in this example).
-* `scores` contains the final score of the match. This can only be `[1, 0]` if Red wins or `[0, 1]` if Blue wins.
-* `pieces` contains the final piece count of Red and Blue, in this order. Their sum will be 49 if the game ended normally. If either agent was disqualified, the piece counts will be 25-0 or 0-25.
+* `scores` contains the final score of the match. This can only be `[1, 0]` if Red wins, `[0, 1]` if Blue wins or `[0.5, 0.5]` in case of a draw by the fifty-move rule.
+* `pieces` contains the final piece count of Red and Blue, in this order. Their sum will be 49 if the game ended normally. If either agent was disqualified, the piece counts will be 25-0 or 0-25. If the game was adjudicated as a draw, the score will be 24-24.
 * `turns` contains the turns that completed successfully. For each turn,
   * `move` is the move that the agent made.
   * `kibitzes` is an array of the lines that the agent kibitzed, possibly empty. In this example, Andromeda kibitzes some statistics about its alpha-beta algorithm. Stable does not kibitz.
   * `time` is the time the agent took for the move, in milliseconds
-* Finally, `error` is empty if the game completed normally. If not empty, it represents the arbiter's message about the final turn (which is NOT included in `turns` above, because the agent did not succeed in making a move). Typically the arbiter will note what went wrong -- incorrect move, timeout, crash etc. See the remaining JSON files for examples.
+* Finally, `error` is empty if the game completed normally. If not empty, it represents the arbiter's message about the final turn (which is NOT included in `turns` above, because the agent did not succeed in making a move). Typically the arbiter will note what went wrong -- incorrect move, timeout, crash etc. See the remaining JSON files for examples. This message can also indicate that the game ended in a draw.
 
 The directory also includes a subdirectory matching the JSON file's name, for example [inputs-001-andromeda-stable/](https://nerdvana.ro/ataxx-viewer/games/inputs-001-andromeda-stable/). You don't need to worry about this. It stores all the inputs given to the agents, in case the programmers want to use them to debug their agents' behavior.
 
