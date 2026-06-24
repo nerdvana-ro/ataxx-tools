@@ -69,7 +69,9 @@ php arbiter/tournament.php
 
 Dacă merge, veți vedea un mesaj cu instrucțiuni de apelare.
 
-## Compilați clientul Doofus
+## Compilați agentul Doofus
+
+**Notă**: Puteți folosi și agentul Simpleton, care constă dintr-un singur fișier C++ și include și un binar deja compilat. Dar vă recomand să exersați compilarea lui Doofus ca să vă obișnuiți cu organizarea codului.
 
 Pentru aceasta, veți avea nevoie de compilatorul de C++ (`g++`) și de utilitarele `cmake` și `make`. Vom descoperi împreună ce pachete trebuie instalate. Pentru Ubuntu, cred că sînt acestea:
 
