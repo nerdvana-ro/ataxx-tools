@@ -6,7 +6,7 @@ Acest set de unelte vă permite să creați un program (agent) pentru jocul Atax
 
 [Agenții](https://github.com/nerdvana-ro/ataxx-tools/tree/main/agent) sînt programe care joacă Ataxx. Agenții citesc starea jocului (configurația tablei și timpul rămas) și tipăresc o mutare.
 
-Repoul include cîțiva agenți, dintre care [Doofus](https://github.com/nerdvana-ro/ataxx-tools/tree/main/agent/doofus) joacă aleatoriu (dar corect). Restul agenților (Error, Hang etc.) se comportă anormal și au rolul de a testa buna funcționare a arbitrului.
+Repoul include cîțiva agenți, dintre care [Doofus](https://github.com/nerdvana-ro/ataxx-tools/tree/main/agent/doofus) și [Simpleton](https://github.com/nerdvana-ro/ataxx-tools/tree/main/agent/simpleton)joacă aleatoriu (dar corect). Restul agenților (Error, Hang etc.) se comportă anormal și au rolul de a testa buna funcționare a arbitrului.
 
 ## Arbitrul
 
