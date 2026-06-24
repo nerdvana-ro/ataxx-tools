@@ -8,6 +8,7 @@ class Args {
     'rounds:',
     'save:',
     'save-inputs',
+    'time:',
   ];
 
   private array $binaries;
@@ -15,6 +16,7 @@ class Args {
   private int $numRounds;
   private string $saveDir;
   private bool $saveInputs;
+  private int $time;
 
   function parse(): void {
     $opts = getopt('', self::OPTIONS);
@@ -28,6 +30,7 @@ class Args {
     $this->numRounds = $opts['rounds'] ?? 1;
     $this->saveDir = $opts['save'] ?? '';
     $this->saveInputs = isset($opts['save-inputs']);
+    $this->time = $opts['time'] ?? 60;
     $this->validate();
   }
 
@@ -37,9 +40,10 @@ class Args {
     print "\n";
     print "    --binary <cale>    Fișierul binar executabil al unui agent sau 'human' pentru jucător uman.\n";
     print "    --name <nume>      Numele agentului.\n";
-    print "    --rounds <număr>   Numărul de runde.\n";
+    print "    --rounds <număr>   Numărul de runde (implicit: 1).\n";
     print "    --save <cale>      Directorul unde vom salva partidele.\n";
     print "    --save-inputs      Salvează și toate datele de intrare.\n";
+    print "    --time <număr>     Timpul permis în secunde (implicit: 60).\n";
     print "\n";
     print "Opțiunile --binary și --name pot fi repetate pentru fiecare agent.\n";
   }
@@ -92,7 +96,7 @@ class Args {
         }
       }
 
-      $result[] = new Player($realBinary, $this->names[$i]);
+      $result[] = new Player($realBinary, $this->names[$i], $this->getTimeMillis());
     }
     return $result;
   }
@@ -107,5 +111,9 @@ class Args {
 
   function getSaveInputs(): bool {
     return $this->saveInputs;
+  }
+
+  function getTimeMillis(): int {
+    return $this->time * 1_000;
   }
 }

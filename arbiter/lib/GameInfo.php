@@ -8,13 +8,15 @@ class GameInfo {
   private array $scores; // scorurile finale: 0.0, 0.5 sau 1.0
   private array $pieces; // numerele de piese la final
 
+  private int $timeMillis;
   private array $turns;  // un vector de TurnInfo
   private array $inputs; // fișierele de intrare la fiecare mutare
   private string $error; // pentru cazul cînd partida se termină cu eroare
 
-  function __construct() {
+  function __construct(int $timeMillis) {
     $this->scores = [0.0, 0.0];
     $this->pieces = [0, 0];
+    $this->timeMillis = $timeMillis;
     $this->turns = [];
     $this->inputs = [];
     $this->error = '';
@@ -77,7 +79,7 @@ class GameInfo {
     }
 
     return [
-      'time_per_game' => Config::TIME_LIMIT_PER_GAME,
+      'time_per_game' => $this->timeMillis,
       'scores' => $this->scores,
       'pieces' => $this->pieces,
       'turns' => $turnData,

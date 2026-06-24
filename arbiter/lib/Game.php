@@ -14,14 +14,11 @@ class Game {
     $this->players = [$p1, $p2];
     $this->board = new Board();
     $this->badMove = false;
-    $this->gameInfo = new GameInfo();
+    $this->gameInfo = new GameInfo($p1->initialTime);
     $this->numJumps = 0;
   }
 
   function run(): void {
-    $this->players[0]->startGame();
-    $this->players[1]->startGame();
-
     while (!$this->isOver()) {
       $this->playMove();
     }

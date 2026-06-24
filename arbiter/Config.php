@@ -11,8 +11,6 @@ class Config {
 
   const KIBITZ_PREFIX = 'kibitz ';
 
-  const TIME_LIMIT_PER_GAME = 60_000; // milisecunde
-
   // Numărul de salturi consecutive la care partida este declarată remiză.
   const MAX_JUMPS = 100;
 
