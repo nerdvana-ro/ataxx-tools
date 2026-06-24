@@ -9,15 +9,18 @@ REPORT_FILE=$SAVE_DIR/report.txt
 LOG_FILE=/tmp/ataxx.log
 
 CONFIG_FILE=include/Constants.h
-REGEX="s/const int POP_COEF = (.+);/const int POP_COEF = %d;/";
-GREP_PATTERN="POP_COEF" # for verification purposes
-MIN_VAL=50
-MAX_VAL=150
-STEP=10
+#REGEX="s/const int POP_COEF = (.+);/const int POP_COEF = %d;/";
+#GREP_PATTERN="POP_COEF" # for verification purposes
+REGEX="s/const int GROUP_COEF = (.+);/const int GROUP_COEF = %d;/";
+GREP_PATTERN="GROUP_COEF" # for verification purposes
+MIN_VAL=22
+MAX_VAL=34
+STEP=2
 
 rm -rf $REPORT_FILE
 
-for val in `seq $MIN_VAL $STEP $MAX_VAL`; do
+for val in `seq $MIN_VAL $STEP $MAX_VAL`;
+do
   regex=`printf "$REGEX" $val`
   echo "==== Running substitution: $regex"
 
