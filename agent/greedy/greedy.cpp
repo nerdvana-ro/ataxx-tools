@@ -1,6 +1,5 @@
 // Același agent ca și Doofus, dar condensat într-un singur fișier. Fără
-// logging.
-#include <random>
+// logging. Alege mereu mutarea cea mai profitabilă.
 #include <sstream>
 #include <stdio.h>
 #include <string>
@@ -20,51 +19,69 @@ const int MAX_MOVES = 200;
 const int M_CLONE = 1;
 const int M_JUMP = 2;
 
+const int CLONE_DELTA[8][2] = {
+  {-1, -1}, {-1, 0}, {-1, +1},
+  {0, -1}, {0, +1},
+  {+1, -1}, {+1, 0}, {+1, +1},
+};
+
+const int JUMP_DELTA[16][2] = {
+  {-2, -2}, {-2, -1}, {-2, 0}, {-2, +1}, {-2, +2},
+  {-1, -2}, {-1, +2},
+  {0, -2}, {0, +2},
+  {+1, -2}, {+1, +2},
+  {+2, -2}, {+2, -1}, {+2, 0}, {+2, +1}, {+2, +2},
+};
+
 class Util {
 public:
-  static int rand(int lo, int hi) {
-    std::uniform_int_distribution<> distrib(lo, hi);
-    return distrib(rng);
-  }
-
   static std::string squareName(int sq) {
     std::string s;
     s = ('a' + sq % BOARD_SIZE);
     s += ('1' + sq / BOARD_SIZE);
     return s;
   }
+};
 
-private:
-  static std::mt19937 rng;
-  static std::random_device rd;
+
+class Move {
+public:
+  u8 type;
+  u8 src, dest;
+
+  std::string toString() {
+    return (type == M_CLONE)
+      ? Util::squareName(dest)
+      : Util::squareName(src) + '-' + Util::squareName(dest);
+  }
 };
 
 
 class Board {
 public:
-  // Pentru fiecare pătrat, precalculează pătratele la distanță 2.
+  // Pentru fiecare pătrat, precalculează pătratele la distanță 1 și 2.
+  static u64 cloneDomains[BOARD_SIZE * BOARD_SIZE];
   static u64 jumpDomains[BOARD_SIZE * BOARD_SIZE];
 
   u64 pieces[2];
   u64 empty;
   bool side;
 
-  static void precomputeJumpDomains() {
-    const int DELTA[16][2] = {
-      {-2, -2}, {-2, -1}, {-2, 0}, {-2, +1}, {-2, +2},
-      {-1, -2}, {-1, +2},
-      {0, -2}, {0, +2},
-      {+1, -2}, {+1, +2},
-      {+2, -2}, {+2, -1}, {+2, 0}, {+2, +1}, {+2, +2} };
+  static void precomputeDomains() {
+    precomputeTypeDomains(CLONE_DELTA, 8, Board::cloneDomains);
+    precomputeTypeDomains(JUMP_DELTA, 16, Board::jumpDomains);
+  }
+
+  static void precomputeTypeDomains(const int (*delta)[2], int count, u64* dest) {
     for (int r = 0; r < BOARD_SIZE; r++) {
       for (int c = 0; c < BOARD_SIZE; c++) {
         int bit = r * BOARD_SIZE + c;
-        for (int i = 0; i < 16; i++) {
-          int r2 = r + DELTA[i][0];
-          int c2 = c + DELTA[i][1];
+        for (int i = 0; i < count; i++) {
+          int r2 = r + delta[i][0];
+          int c2 = c + delta[i][1];
           if ((r2 >= 0) && (r2 < BOARD_SIZE) &&
               (c2 >= 0) && (c2 < BOARD_SIZE)) {
-            jumpDomains[bit] |= 1ll << (r2 * BOARD_SIZE + c2);
+            dest[bit] |= 1ll << (r2 * BOARD_SIZE + c2);
           }
         }
       }
@@ -92,25 +109,27 @@ public:
     }
   }
 
-  int getNumPiecesToMove() {
-    return __builtin_popcountll(pieces[side]);
+  int eval() {
+    return __builtin_popcountll(pieces[side]) - __builtin_popcountll(pieces[!side]);
   }
 
-  int getNumEmpty() {
-    return __builtin_popcountll(empty);
-  }
-};
+  void makeMove(Move m) {
+    if (m.type == M_JUMP) {
+      // Curăță sursa.
+      pieces[side] ^= 1ll << m.src;
+      empty ^= 1ll << m.src;
+    }
 
+    // Umple destinația.
+    pieces[side] ^= 1ll << m.dest;
+    empty ^= 1ll << m.dest;
 
-class Move {
-public:
-  u8 type;
-  u8 src, dest;
+    // Întoarce vecinii.
+    u64 opp_neighbors = pieces[!side] & cloneDomains[m.dest];
+    pieces[side] ^= opp_neighbors;
+    pieces[!side] ^= opp_neighbors;
 
-  std::string toString() {
-    return (type == M_CLONE)
-      ? Util::squareName(dest)
-      : Util::squareName(src) + '-' + Util::squareName(dest);
+    side = !side;
   }
 };
 
@@ -148,15 +167,6 @@ private:
   }
 
   void genJumps() {
-    if (board->getNumPiecesToMove() < board->getNumEmpty()) {
-      genJumpsFromSrc();
-    } else {
-      genJumpsFromDest();
-    }
-  }
-
-  // Preferabil cînd numărul de surse (piese) este mic.
-  void genJumpsFromSrc() {
     u64 src = board->pieces[board->side];
     while (src) {
       int sbit = __builtin_ctzll(src);
@@ -165,21 +175,6 @@ private:
       while (dest) {
         int dbit = __builtin_ctzll(dest);
         dest ^= 1ll << dbit;
-        pushMove(M_JUMP, sbit, dbit);
-      }
-    }
-  }
-
-  // Preferabil cînd numărul de destinații (pătrate goale) este mic.
-  void genJumpsFromDest() {
-    u64 dest = board->empty;
-    while (dest) {
-      int dbit = __builtin_ctzll(dest);
-      dest ^= 1ll << dbit;
-      u64 src = Board::jumpDomains[dbit] & board->pieces[board->side];
-      while (src) {
-        int sbit = __builtin_ctzll(src);
-        src ^= 1ll << sbit;
         pushMove(M_JUMP, sbit, dbit);
       }
     }
@@ -194,34 +189,46 @@ private:
 };
 
 
-class RandomAgent {
+class GreedyAgent {
 public:
   Board* board;
   Move moves[MAX_MOVES];
 
-  RandomAgent(Board* board) {
+  GreedyAgent(Board* board) {
     this->board = board;
   }
 
   Move getMove() {
     MoveGen moveGen(board, moves);
     moveGen.run();
-    int i = Util::rand(0, moveGen.numMoves - 1);
-    return moveGen.moves[i];
+
+    int bestMove;
+    int bestScore = BOARD_SIZE * BOARD_SIZE + 1;
+
+    for (int i = 0; i < moveGen.numMoves; i++) {
+      Board b2 = *board;
+      b2.makeMove(moves[i]);
+      int e = b2.eval();
+      if (e < bestScore) { // Căutăm cea mai proastă poziție pentru adversar.
+        bestScore = e;
+        bestMove = i;
+      }
+    }
+
+    return moves[bestMove];
   }
 };
 
-std::random_device Util::rd;
-std::mt19937 Util::rng(rd());
+u64 Board::cloneDomains[BOARD_SIZE * BOARD_SIZE];
 u64 Board::jumpDomains[BOARD_SIZE * BOARD_SIZE];
 
 int main(int argc, char** argv) {
-  Board::precomputeJumpDomains();
+  Board::precomputeDomains();
 
   Board board;
   board.readFromStdin();
 
-  RandomAgent agent(&board);
+  GreedyAgent agent(&board);
   Move m = agent.getMove();
   printf("%s\n", m.toString().c_str());
 

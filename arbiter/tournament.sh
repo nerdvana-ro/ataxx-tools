@@ -9,8 +9,8 @@ rm -rf $SAVE_DIR
 mkdir $SAVE_DIR
 
 php arbiter/tournament.php \
-    --binary agent/doofus/build/doofus --name doofus1 \
-    --binary agent/doofus/build/doofus --name doofus2 \
+    --binary agent/doofus/build/doofus --name doofus \
+    --binary agent/greedy/greedy --name greedy \
     --rounds 1 \
     --save $SAVE_DIR \
     --save-inputs \
