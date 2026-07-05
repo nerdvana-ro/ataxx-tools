@@ -19,9 +19,10 @@ Dacă agentul se termină anormal, depășește timpul sau încearcă să facă 
 Datele de intrare au următorul format, fără linii goale și fără comentarii, care există doar pentru clarificări.
 
 ```
-0
 // Jucătorul la mutare (0 = primul jucător = roșu sau 1 = al doilea jucător = albastru).
+0
 
+// O matrice de 7x7 caractere unde 'x' = piesă roșie, 'o' = piesă albastră, '.' = pătrat gol.
 x.....o
 .......
 .......
@@ -29,10 +30,9 @@ x.....o
 .......
 .......
 o.....x
-// O matrice de 7x7 caractere unde 'x' = piesă roșie, 'o' = piesă albastră, '.' = pătrat gol.
 
-180000 180000
 // Timpii rămași ai celor doi jucători, valori întregi, în milisecunde.
+180000 180000
 ```
 
 ## Datele de ieșire
