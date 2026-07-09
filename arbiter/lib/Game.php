@@ -19,6 +19,9 @@ class Game {
   }
 
   function run(): void {
+    $this->players[0]->resetClock();
+    $this->players[1]->resetClock();
+
     while (!$this->isOver()) {
       $this->playMove();
     }

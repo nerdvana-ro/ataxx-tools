@@ -16,8 +16,12 @@ class Player {
     $this->score = 0.0;
     $this->pieces = 0;
     $this->numGames = 0;
-    $this->remainingTime = $this->initialTime = $timeMillis;
+    $this->initialTime = $timeMillis;
     Log::info('Am adăugat jucătorul %s cu binarul %s.', [ $name, $binary ]);
+  }
+
+  function resetClock(): void {
+    $this->remainingTime = $this->initialTime;
   }
 
   function requestAction(string $gameState): Output {
