@@ -55,6 +55,7 @@ class Interactor {
 
     $contents = file_get_contents($this->errorFile);
     if ($contents) {
+      $contents = str_replace('%', '%%', $contents);
       Log::debug("Programul a tipărit la stderr:\n{$contents}");
     }
 
