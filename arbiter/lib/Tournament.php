@@ -39,8 +39,8 @@ class Tournament {
     $g->run();
 
     $gi = $g->getInfo();
-    $p1->addResult($gi->getScore(0), $gi->getPieces(0));
-    $p2->addResult($gi->getScore(1), $gi->getPieces(1));
+    $p1->addResult($gi->getScore(0), [$gi->getPieces(0), $gi->getPieces(1)]);
+    $p2->addResult($gi->getScore(1), [$gi->getPieces(1), $gi->getPieces(0)]);
     $saver = new Saver($gi, [$p1, $p2], $round, $this->saveDir,
                        $this->saveInputs);
     $saver->saveAll();
@@ -52,13 +52,14 @@ class Tournament {
     $len = Str::maxLength(array_column($this->players, 'name'));
 
     Log::success('');
-    Log::success('%s  Partide    Puncte    Piese', [mb_str_pad('Nume', $len)]);
-    Log::success(mb_str_pad('', $len + 28, '-'));
+    Log::success('%s  Partide    Puncte    Golaveraj', [mb_str_pad('Nume', $len)]);
+    Log::success(mb_str_pad('', $len + 35, '-'));
     foreach ($ord as $x) {
       $p = $this->players[$x];
       $name = mb_str_pad($p->name, $len + 2);
-      Log::success("%s  %3d       %4.1f     %4d",
-                   [$name, $p->numGames, $p->score, $p->pieces]);
+      Log::success("%s  %3d       %4.1f    %+4d (%d-%d)",
+                   [$name, $p->numGames, $p->score, $p->getPieceDifference(),
+                    $p->pieces[0], $p->pieces[1]]);
     }
     Log::success('');
   }
@@ -72,7 +73,7 @@ class Tournament {
       if ($pa->score != $pb->score) {
         return $pb->score <=> $pa->score;
       }
-      return $pb->pieces <=> $pa->pieces;
+      return $pb->getPieceDifference() <=> $pa->getPieceDifference();
     });
 
     return $ord;

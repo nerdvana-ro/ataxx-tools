@@ -4,7 +4,7 @@ class Player {
   private string $binary;
   public string $name;
   public string $score;      // puncte adunate în partidele terminate
-  public string $pieces;     // piese adunate în partidele terminate
+  public array $pieces;      // piese proprii/adverse adunate în partidele terminate
   public string $numGames;   // numărul de partide terminate
   public int $initialTime;   // timpul inițial în milisecunde
   public int $remainingTime; // timpul rămas în partida curentă
@@ -14,7 +14,7 @@ class Player {
     $this->binary = $binary;
     $this->name = $name;
     $this->score = 0.0;
-    $this->pieces = 0;
+    $this->pieces = [0, 0];
     $this->numGames = 0;
     $this->initialTime = $timeMillis;
     Log::info('Am adăugat jucătorul %s cu binarul %s.', [ $name, $binary ]);
@@ -33,9 +33,14 @@ class Player {
     return $inter->getOutput();
   }
 
-  function addResult(float $score, int $pieces): void {
+  function addResult(float $score, array $pieces): void {
     $this->score += $score;
-    $this->pieces += $pieces;
+    $this->pieces[0] += $pieces[0];
+    $this->pieces[1] += $pieces[1];
     $this->numGames++;
+  }
+
+  function getPieceDifference(): int {
+    return $this->pieces[0] - $this->pieces[1];
   }
 }
