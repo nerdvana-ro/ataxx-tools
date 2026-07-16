@@ -27,9 +27,12 @@ class Player {
   function requestAction(string $gameState): Output {
     Log::info('Aștept o acțiune de la %s', [ $this->name ]);
     $inter = new Interactor($this->binary, $gameState);
-    $inter->run($this->remainingTime);
-    $this->lastMoveTime = min($inter->getTime(), $this->remainingTime);
-    $this->remainingTime -= $this->lastMoveTime;
+    try {
+      $inter->run($this->remainingTime);
+    } finally {
+      $this->lastMoveTime = min($inter->getTime(), $this->remainingTime);
+      $this->remainingTime -= $this->lastMoveTime;
+    }
     return $inter->getOutput();
   }
 
