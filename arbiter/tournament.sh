@@ -8,13 +8,23 @@ SAVE_DIR=~/Desktop/ataxx-games
 
 # O listă de identificatori dintre cei definiți mai jos în AGENT
 declare -a PLAYERS=(
-  "andromeda"
-  "SLC"
+#  "Aatroxx"
+  "andromeda-stable"
+#  "andromeda"
+  "Ascend"
+#  "Ascend-lol"
+#  "AtaXXL"
+#  "Bobxx"
+#  "Dictator"
+#  "Fluxx"
+#  "Jarona"
+#  "Lorenzo"
+#  "SLC"
 )
 
 # Comanda de invocat. Parametrizează aici numărul de runde, timpul etc.
 cmd="php arbiter/tournament.php
-        --rounds 1
+        --rounds 10
         --save $SAVE_DIR
         --save-inputs
         --time 60"
@@ -34,14 +44,17 @@ AGENT["silent"]="agent/silent/silent"
 AGENT["Karen"]="human"
 
 # Implementări propriu-zise
+AGENT["Aatroxx"]="../agents/Aatroxx-roby/main"
 AGENT["andromeda"]="../andromeda/build/andromeda"
 AGENT["andromeda-stable"]="../andromeda-stable/build/andromeda"
 AGENT["Ascend"]="../agents/Ascend-flaviu/main"
+AGENT["Ascend-lol"]="../agents/ascend_versiune_lol"
 AGENT["AtaXXL"]="../agents/AtaXXL-andrei-horia/ataxxl"
+AGENT["Bobxx"]="../agents/bobxx-mihnea/bobxx"
 AGENT["Dictator"]="../agents/dictator-rareș"
 AGENT["Fluxx"]="../agents/fluxx-traian/fluxx"
+AGENT["Jarona"]="../agents/jarona-alex-cezar/jarona"
 AGENT["Lorenzo"]="../agents/lorenzo-matei-radu/lorenzo"
-AGENT["Spamtenna"]="../agents/spamtenna-alex-cezar"
 AGENT["SLC"]="../agents/sardine-la-conservă-andrei-maria/main"
 
 # Completează comanda cu binarele și cu numele jucătorilor.

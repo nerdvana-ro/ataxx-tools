@@ -66,6 +66,9 @@ class Interactor {
         $this->kibitzes[] = trim($suf);
       }
     }
+    foreach ($this->kibitzes as $kib) {
+      Log::info("kibitz $kib");
+    }
   }
 
   function run(int $timeLimit): void {

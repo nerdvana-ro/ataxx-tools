@@ -118,7 +118,7 @@ class Game {
 
     $this->board->print();
     for ($i = 0; $i < 2; $i++) {
-      Log::debug('%s⬤%s %s    %2d piese %0.3f s', [
+      Log::info('%s⬤%s %s    %2d piese %0.3f s', [
         AnsiColors::PIECES[$i],
         AnsiColors::DEFAULT,
         mb_str_pad($p[$i]->name, $padLen),

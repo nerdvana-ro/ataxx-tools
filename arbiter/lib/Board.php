@@ -29,7 +29,7 @@ class Board {
   }
 
   function print(): void {
-    Log::debug("    a   b   c   d   e   f   g");
+    Log::info("    a   b   c   d   e   f   g");
     $this->printTopSeparatorLine();
 
     for ($r = 0; $r < Config::BOARD_SIZE; $r++) {
@@ -44,13 +44,13 @@ class Board {
         }
         $s .= '│';
       }
-      Log::debug($s);
+      Log::info($s);
       if ($r < Config::BOARD_SIZE - 1) {
         $this->printMiddleSeparatorLine();
       }
     }
     $this->printBottomSeparatorLine();
-    Log::debug('La mutare: %s⬤%s',
+    Log::info('La mutare: %s⬤%s',
                [AnsiColors::PIECES[$this->side], AnsiColors::DEFAULT]);
   }
 
@@ -72,7 +72,7 @@ class Board {
       $s .= "───";
       $s .= ($i < Config::BOARD_SIZE - 1) ? $center : $right;
     }
-    Log::debug($s);
+    Log::info($s);
   }
 
   function anyMoves(): bool {

@@ -32,7 +32,7 @@ do
 
   echo "* Building the project"
   cd build
-  make
+  make -j5
 
   echo "* Running the tournament"
   cd $ORIG_DIR
